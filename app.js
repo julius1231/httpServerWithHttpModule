@@ -28,6 +28,20 @@ const posts = [
   },
 ];
 
+const datas = []
+for (let i = 0; i < users.length; i++){
+  for (let j = 0; j < posts.length; j++){
+    if (users[i].id === posts[j].userId){
+      const Data = {};
+      Data['userID'] = users[i].id,
+      Data['userName']= users[i].name,
+      Data['postingId'] = posts[j].id,
+      Data['postingTitle'] = posts[j].title,
+      Data['postingContent'] = posts[j].content
+      datas.push(Data)
+    }
+  }
+}
 // // 엔드포인트
 // function (request, response) {
 //   if (ursl === '/ping'){}
@@ -44,10 +58,13 @@ const server = http.createServer(); //http 객체 안에 내장되어 있는 cre
 const httpRequestListener = function(request, response){
   const {url, method} = request;
   if (method === 'GET'){
-    if(url === '/ping'){
+    if (url === '/ping'){
       response.writeHead(200, {'Content-Type' : 'application/json'});
       response.end(JSON.stringify({message : "pong"}));
-    };
+    } else if (url === '/post/data'){
+      response.writeHead(200, {'Content-Type' : 'application/json'});
+      response.end(JSON.stringify(datas));
+    }
   } else if (method === 'POST'){
     if(url === '/user/add'){
       let body = "";
@@ -84,11 +101,10 @@ const httpRequestListener = function(request, response){
         });
         response.writeHead(200, {'Content-Type' : 'application/json'});
         response.end(JSON.stringify({"message" : "postCreated"}));
-      })
+        })
+      }
     }
   }
-} 
-
 server.on("request", httpRequestListener); // Event로서 등록
 
 const IP = '127.0.0.1';
@@ -99,4 +115,4 @@ const PORT = 8000;
 server.listen(PORT, IP, function(){
   console.log(`Listening to request on ip ${IP} & port ${PORT}`)
 })
-//listen() 함수가 정상적으로 실행됐는지 확인하기 위헤 콜백 함수에 콘솔 로그를 찍어서 출력
+// listen() 함수가 정상적으로 실행됐는지 확인하기 위헤 콜백 함수에 콘솔 로그를 찍어서 호출
