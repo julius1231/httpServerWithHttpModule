@@ -49,7 +49,7 @@ const httpRequestListener = function(request, response){
       response.end(JSON.stringify({message : "pong"}));
     };
   } else if (method === 'POST'){
-    if(url === '/postman'){
+    if(url === '/user/add'){
       let body = "";
       //body에 담긴 값들이 여러 조각으로 쪼개져서 옵니다. 그렇기 떄문에 여러가지 데이터들을 해당 로직에서 사용하려면 하나로 합쳐야 되는 작업이 필요 (data라는 이벤트가 발생할 때 마다 body라는 변수에 하나하나 합쳐지게 된다.)
       request.on("data", (data)=> {
@@ -69,6 +69,22 @@ const httpRequestListener = function(request, response){
         response.writeHead(200, {'Content-Type' : 'application/json'});
         response.end(JSON.stringify({"message" : "userCreated"}));
       });
+    } else if (url === '/post'){
+      let body = "";
+      request.on('data', (data)=>{
+        body += data;
+      });
+      request.on('end', ()=>{
+        const post = JSON.parse(body);
+        posts.push({
+          id: post.id,
+          title: post.title,
+          content: post.content,
+          userId: post.userId,
+        });
+        response.writeHead(200, {'Content-Type' : 'application/json'});
+        response.end(JSON.stringify({"message" : "postCreated"}));
+      })
     }
   }
 } 
