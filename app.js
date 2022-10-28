@@ -28,7 +28,9 @@ const posts = [
   },
 ];
 
-const datas = []
+const datas = {"data":[
+
+]}
 for (let i = 0; i < users.length; i++){
   for (let j = 0; j < posts.length; j++){
     if (users[i].id === posts[j].userId){
@@ -38,7 +40,7 @@ for (let i = 0; i < users.length; i++){
       Data['postingId'] = posts[j].id,
       Data['postingTitle'] = posts[j].title,
       Data['postingContent'] = posts[j].content
-      datas.push(Data)
+      datas['data'].push(Data);
     }
   }
 }
@@ -101,6 +103,17 @@ const httpRequestListener = function(request, response){
         });
         response.writeHead(200, {'Content-Type' : 'application/json'});
         response.end(JSON.stringify({"message" : "postCreated"}));
+        })
+      }
+    } else if (method === "PATCH"){
+      if (url === "/post/patch")()=>{
+        let body = "";
+        request.on('data', (data)=>{
+          body += data;
+        });
+        request.on('end', ()=>{
+          const content = Json.parse(body);
+
         })
       }
     }
